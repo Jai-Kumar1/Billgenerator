@@ -1,22 +1,20 @@
 import javax.swing.*;
 import java.awt.event.*;
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.Random;
 
-public class ElectricityBillingSystem extends  JFrame implements ActionListener {
-
+public class ElectricityBillingSystem extends JFrame implements ActionListener {
+    // Components
     JLabel idLabel, cnameLabel, unitsLabel, totalLabel;
     JTextField idField, cnameField, unitsField;
-    JButton calculateButton, printButton, clearButton, saveButton;
+    JButton calculateButton, printButton, clearButton;
     JTextArea printArea;
     double totalbill = 0;
+    
 
     public ElectricityBillingSystem() {
-    
-        setTitle("Electricity Billing System");        JFrame f=new JFrame("Button Example");
-        setSize(600, 550);
+        // Frame setup
+        setTitle("Electricity Billing System");
+        setSize(600, 500);
         setLocationRelativeTo(null); // Center the window on the screen
         setLayout(null);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -42,7 +40,7 @@ public class ElectricityBillingSystem extends  JFrame implements ActionListener 
         cnameField.setBounds(240, 80, 200, 20);
         add(cnameField);
 
-        unitsLabel = new JLabel("Billing Units:");
+        unitsLabel = new JLabel("Units:");
         unitsLabel.setBounds(125, 110, 100, 20);
         add(unitsLabel);
 
@@ -51,27 +49,22 @@ public class ElectricityBillingSystem extends  JFrame implements ActionListener 
         add(unitsField);
 
         calculateButton = new JButton("Calculate");
-        calculateButton.setBounds(120, 140, 100, 30);
+        calculateButton.setBounds(120, 150, 100, 30);
         calculateButton.addActionListener(this);
         add(calculateButton);
 
         printButton = new JButton("Print");
-        printButton.setBounds(235, 140, 100, 30);
+        printButton.setBounds(235, 150, 100, 30);
         printButton.addActionListener(this);
         add(printButton);
 
         clearButton = new JButton("Clear");
-        clearButton.setBounds(350, 140, 100, 30);
+        clearButton.setBounds(350, 150, 100, 30);
         clearButton.addActionListener(this);
         add(clearButton);
 
-saveButton = new JButton("Save");
-        saveButton.setBounds(235, 400, 100, 30); // Position the button
-        saveButton.addActionListener(this); // Add action listener
-        add(saveButton); // Add button to the frame
-
         totalLabel = new JLabel();
-        totalLabel.setBounds(150, 200, 350, 20);
+        totalLabel.setBounds(170, 200, 350, 20);
         add(totalLabel);
 
         printArea = new JTextArea();
@@ -85,13 +78,12 @@ saveButton = new JButton("Save");
 
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == calculateButton) {
+
             calculate();
         } else if (e.getSource() == printButton) {
             print();
         } else if (e.getSource() == clearButton) {
             clear();
-        } else if (e.getSource() == saveButton) { // Handle save button click
-            saveDataToFile();
         }
     }
 
@@ -111,18 +103,18 @@ saveButton = new JButton("Save");
 
             double chg;
 
-            if (conu < 200) {
+            if (conu < 500) {
                 chg = 1.00;
-            } else if (conu < 400) {
-                chg = 1.80;
             } else if (conu < 600) {
+                chg = 1.80;
+            } else if (conu < 800) {
                 chg = 2.80;
             } else {
                 chg = 3.00;
             }
 
             double gramt = conu * chg;
-            totalLabel.setText("Customer ID: " + cid + ", Total Bill: ₹" + gramt);
+            totalLabel.setText("Customer ID: " + cid + ", Total Bill: $" + gramt);
             totalbill = gramt;
         } catch (NumberFormatException ex) {
             JOptionPane.showMessageDialog(this, "Invalid units. Please enter an integer value.");
@@ -148,13 +140,13 @@ saveButton = new JButton("Save");
         try {
             int conu = Integer.parseInt(conuText);
 
-            String printContent = "Electricity Bill\n"
+            String printContent = "Electricity Billing\n"
                                 +"\n"
                                 +"Bill Number: " + generateBillNumber() + "\n"
                                 + "Customer id: " + billid + "\n"
                                 + "Customer Name: " + customer + "\n"
-                                + "Billing Unit: " + conu + "\n"
-                                + "Total ₹" +totalbill+ "\n"
+                                + "Unit: " + conu + "\n"
+                                + "Total: " +totalbill+ "\n"
                                 + "Thank you. Come Again\n";
             printArea.setText(printContent);
         } catch (NumberFormatException ex) {
@@ -169,22 +161,9 @@ saveButton = new JButton("Save");
         totalLabel.setText("");
         printArea.setText("");
     }
-    
-    public void saveDataToFile() {
-        String fileName = "billing_data.txt";
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
-            String content = printArea.getText();
-            writer.write(content);
-            JOptionPane.showMessageDialog(this, "Data saved successfully to " + fileName);
-        } catch (IOException e) {
-            JOptionPane.showMessageDialog(this, "An error occurred while saving the data.");
-            e.printStackTrace();
-        }
-    }
-
-    public String generateBillNumber() {
+      public String generateBillNumber() {
         Random rand = new Random();
-        int billNumber = rand.nextInt(900000) + 100000; // Generates a random 6-digit number
+        int billNumber = rand.nextInt(9000) + 1000; // Generates a random 4-digit number
         return String.valueOf(billNumber);
     }
 
